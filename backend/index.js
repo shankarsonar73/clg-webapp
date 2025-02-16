@@ -1,19 +1,31 @@
-const http = require('http');
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import authRoutes from './routes/auth.js';
+import sequelize from './config/database.js';
 
-// Create an HTTP server
-const server = http.createServer((req, res) => {
-    // Set the response headers
-    res.writeHead(200, { 'Content-Type': 'text/html' });
+dotenv.config();
 
-    // Write the response content
-    res.write('<h1>Hello, Node.js HTTP Server!</h1>');
-    res.end();
-});
+const app = express();
 
-// Specify the port to listen on
-const port = 3000;
+app.use(cors());
+app.use(express.json());
 
-// Start the server
-server.listen(port, () => {
-    console.log(`Node.js HTTP server is running on port ${port}`);
-});
+app.use('/api/auth', authRoutes);
+
+const PORT = process.env.PORT || 5000;
+
+async function startServer() {
+  try {
+    await sequelize.sync();
+    console.log('Database connected successfully');
+    
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error('Unable to start server:', error);
+  }
+}
+
+startServer();
