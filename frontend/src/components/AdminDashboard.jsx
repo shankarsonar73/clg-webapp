@@ -48,7 +48,6 @@ function AdminDashboard() {
     navigate('/login');
   };
 
-  // if (loading) Continuing directly from the AdminDashboard.jsx component:
 
   if (loading) {
     return <div>Loading...</div>;
